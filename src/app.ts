@@ -1,11 +1,10 @@
 // The app server
 const dotenv = require('dotenv');
-
 dotenv.config({ path: './env/.env', debug: process.env.DEBUG });
-//import connectDB from "./config/db";
-import express, { Application } from "express"
-
-console.log(process.env.MONGO_URI)
+import connectDB from "./config/db";
+import express, { Application } from "express";
+console.log(process.env.MONGO_URI);
+connectDB();
 
 
 interface KM {
@@ -39,6 +38,7 @@ class App implements KM{
         controllers.forEach(controller => {
             this.app.use("/api/v1/", controller.router)
         })
+        console.log("test2")
     }
 
     public listen() {

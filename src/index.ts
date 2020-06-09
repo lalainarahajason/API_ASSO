@@ -1,13 +1,14 @@
 import App from './app'
-//import routeController from "./routes/volontaires";
-//import authController from "./routes/auth";
+import RouteController from "./api/volunteer";
+
+//import authController from "./api/auth";
 //import errorHandler from "./middlewares/error";
-//import connectDB from "./config/db";
-connectDB();
+
+
 const app = new App({
     port: 8080,
-    controllers: [ new routeController(), new authController() ],
-    middleWares: [errorHandler]
+    controllers: [new RouteController()],
+    middleWares: []
 })
 
 app.listen();
