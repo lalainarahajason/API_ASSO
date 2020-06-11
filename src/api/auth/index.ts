@@ -1,5 +1,5 @@
 import * as express from "express";
-import * as VolunteerController from "../services/volunteers" 
+import * as AuthController from "../../services/auth"
 
 class RouteController {
     public router = express.Router();
@@ -11,17 +11,16 @@ class RouteController {
     public initRoutes(){
 
         /**
-         * Find all volunteers
+         * Register a volunteer
          * /api/v1/volunteers
          */
-        this.router.get('/volunteers', (
+        this.router.post('/volunteer', (
             req:express.Request, 
             res:express.Response, 
             next:express.NextFunction
         ) => {
-            VolunteerController.findAll(req, res, next);
+            AuthController.registerVolunteer(req, res, next);
         })
-
 
     }
 }

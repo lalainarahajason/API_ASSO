@@ -21,6 +21,7 @@
     "helmet": "^3.22.0",
     "mongoose": "^5.9.18",
     "node-geocoder": "^3.27.0",
+    "slugify": "^1.4.0",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.5"
   }

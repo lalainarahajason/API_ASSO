@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema, Model, model } from "mongoose";
-//import slugify from "slugify";
+import slugify from "slugify";
 import geocoder from "../utils/geocoder";
 //const bcrypt = require("bcryptjs");
 
@@ -17,12 +17,12 @@ var VolunteerSchema:Schema = new Schema({
     slug: String,
     metier: [
         {
-            type: String
+            type: Array
         }
     ],
     centreInteret: [
         {
-            type: String,
+            type: Array,
             required:true
         }
     ],
@@ -33,7 +33,7 @@ var VolunteerSchema:Schema = new Schema({
     },
     address:{
         type: String,
-        required: [true, 'Please add an address']
+        required: [true, 'Please add a valid address']
     },
     location: {
         type: {
@@ -52,11 +52,12 @@ var VolunteerSchema:Schema = new Schema({
         zipcode: String,
         country: String
     },
-    age: [
-        {
-            type: String
-        }
-    ]
+    age: {
+        type: Number,
+        description:"Age in numeric value",
+        minimum: [18, 'Age must not be under 18'],
+        maximum: [99, 'Age must not be upper of 99'],
+    }
 },{
     toJSON: { virtuals: true },
     toObject: { virtuals: true}
