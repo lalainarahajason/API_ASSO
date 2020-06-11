@@ -3,7 +3,7 @@ import slugify from "slugify";
 import geocoder from "../utils/geocoder";
 //const bcrypt = require("bcryptjs");
 
-var VolunteerSchema:Schema = new Schema({
+const VolunteerSchema:Schema = new Schema({
     first_name: {
         type: String,
         required: [true, 'Please add a name'],
@@ -15,15 +15,16 @@ var VolunteerSchema:Schema = new Schema({
         type: String
     },
     slug: String,
-    metier: [
-        {
-            type: Array
-        }
-    ],
-    centreInteret: [
+    jobs: [
         {
             type: Array,
-            required:true
+            ref:"jobs"
+        }
+    ],
+    points_of_interests: [
+        {
+            type: Array,
+            ref:"interests"
         }
     ],
     phone:{
