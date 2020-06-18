@@ -1,8 +1,15 @@
 import mongoose, { Document, Schema, Model, model } from "mongoose";
 import slugify from "slugify";
 import geocoder from "../utils/geocoder";
-//const bcrypt = require("bcryptjs");
+import { AnyARecord } from "dns";
+const bcrypt = require("bcryptjs");
 
+export interface VolunteerModel extends mongoose.Document {
+    first_name:string,
+    slug:string,
+    address:string,
+    location:object
+}
 const VolunteerSchema:Schema = new Schema({
     first_name: {
         type: String,
@@ -17,8 +24,9 @@ const VolunteerSchema:Schema = new Schema({
     slug: String,
     jobs: [
         {
-            type: Array,
-            ref:"jobs"
+            type: String,
+            enum : ['agriculture','bureautique'],
+            default: 'agriculture'
         }
     ],
     points_of_interests: [
@@ -64,4 +72,30 @@ const VolunteerSchema:Schema = new Schema({
     toObject: { virtuals: true}
 });
 
-export default mongoose.model('Volunteer', VolunteerSchema);
+// Slugify user first_name
+VolunteerSchema.pre('save', function(next) {
+    const doc = <VolunteerModel>this;
+    doc.slug = slugify(doc.first_name, {lower:true});
+    next();
+});
+
+// Geocode & create location field
+VolunteerSchema.pre('save', async function(next) {
+    const doc = <VolunteerModel>this;
+    const loc = await geocoder.geocode(doc.address);
+    doc.location = {
+        type:'Point',
+        coordinates: [loc[0].longitude, loc[0].latitude],
+        formattedAddress: loc[0].formattedAddress,
+        street: loc[0].streetName,
+        city: loc[0].city,
+        state: loc[0].stateCode,
+        zipcode: loc[0].zipCode,
+        country: loc[0].countryCode,
+    };
+    doc.address = undefined || loc[0].address;
+    next();
+})
+
+
+export default mongoose.model<VolunteerModel>('Volunteer', VolunteerSchema);
