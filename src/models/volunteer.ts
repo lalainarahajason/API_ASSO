@@ -7,7 +7,9 @@ export interface VolunteerModel extends mongoose.Document {
     first_name:string,
     slug:string,
     address:string,
-    location:object
+    location:object,
+    age:number,
+    zipcode:string
 }
 const VolunteerSchema:Schema = new Schema({
     first_name: {
@@ -43,6 +45,9 @@ const VolunteerSchema:Schema = new Schema({
         type: String,
         required: [true, 'Please add a valid address']
     },
+    zipcode:{
+        type:String
+    },
     location: {
         type: {
             type: String,
@@ -75,6 +80,14 @@ const VolunteerSchema:Schema = new Schema({
 VolunteerSchema.pre('save', function(next) {
     const doc = <VolunteerModel>this;
     doc.slug = slugify(doc.first_name, {lower:true});
+    next();
+});
+
+// Add age
+VolunteerSchema.pre('save', function(next) {
+    const doc = <VolunteerModel>this;
+    const currentYear = new Date();
+    doc.age = currentYear.getUTCFullYear() - doc.age;
     next();
 });
 

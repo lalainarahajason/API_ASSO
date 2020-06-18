@@ -13,11 +13,22 @@ export const registerVolunteer = asyncHandler(async (
     res:express.Response, 
 ) => {
     const userData = req.body;
-    const user = await createNewUser(userData);
 
+    if(userData.password != userData.confirm) {
+        throw new Error("Password doesn't match");
+    }
+
+    if(await isUserExists(userData.email)){
+        throw new Error("User already Exits");
+    }
+
+    const profile = await createUserProfile(Volunteer, userData);
+    const user = await createNewUser(userData, profile._id);
+    
     return res.status(200).json({
         success:true,
-        userData
+        user,
+        profile
     });
 });
 
@@ -26,13 +37,10 @@ export const registerVolunteer = asyncHandler(async (
  * @param {userData} object : user data object
  * @return user:UserModel
  */
-const createNewUser = async(userData):Promise<UserModel> => {
-    
-    if(await isUserExists(userData.email)){
-        throw new Error("User already Exits");
-    }
-    const user = await User.create(userData);
-    return user;
+const createNewUser = async(userData, _id):Promise<object> => {
+    userData.userId = _id;
+    await User.create(userData);
+    return await User.find({userId : _id}).select("-password");
 };
 
 /**
@@ -42,8 +50,14 @@ const createNewUser = async(userData):Promise<UserModel> => {
  */
 const isUserExists = async(email): Promise<boolean> => {
     const user = await User.findOne({ email : email });
-    console.log("---------")
-    console.log(user)
-    console.log("---------")
     return user ? true : false;
 };
+
+/**
+ * Create profile
+ * @param {Model} : Model,  user model
+ * @return boolean
+ */
+const createUserProfile = async(Model, data):Promise<any> => {
+    return await Model.create(data);
+}

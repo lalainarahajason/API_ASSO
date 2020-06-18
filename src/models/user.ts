@@ -12,10 +12,17 @@ const UserSchema:Schema = new Schema({
         maxlength: [50, 'Name cannot be more than 50 characters'],
         trime:true,
         unique:false,
+        match: [
+            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            'Please validate email'
+        ]
     },
     password: {
         type: String
-    }
+    },
+    userId:{
+        type: Schema.Types.ObjectId
+    },
 },{
     toJSON: { virtuals: true },
     toObject: { virtuals: true}
