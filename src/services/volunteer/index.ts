@@ -8,6 +8,7 @@ export const findAll = asyncHandler(async (
     res:express.Response
 ) => {
     const volunteer = await Volunteer.find({});
+    
     return res.status(200).json({
         success:true,
         volunteer

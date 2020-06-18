@@ -1,7 +1,6 @@
 import mongoose, { Document, Schema, Model, model } from "mongoose";
 import slugify from "slugify";
 import geocoder from "../utils/geocoder";
-import { AnyARecord } from "dns";
 const bcrypt = require("bcryptjs");
 
 export interface VolunteerModel extends mongoose.Document {
