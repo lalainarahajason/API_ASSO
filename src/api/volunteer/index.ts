@@ -1,5 +1,5 @@
 import * as express from "express";
-import * as VolunteerController from "../../services/volunteer"
+import * as VolunteerController from "../../controllers/volunteer"
 
 class RouteController {
     public router = express.Router();

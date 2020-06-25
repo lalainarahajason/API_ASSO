@@ -1,15 +1,15 @@
 import mongoose, { Document, Schema, Model, model } from "mongoose";
 import slugify from "slugify";
 import geocoder from "../utils/geocoder";
-const bcrypt = require("bcryptjs");
 
 export interface VolunteerModel extends mongoose.Document {
     first_name:string,
     slug:string,
-    address:string,
     location:object,
     age:number,
-    zipcode:string
+    address:string,
+    zipcode:string,
+    city:string
 }
 const VolunteerSchema:Schema = new Schema({
     first_name: {
@@ -46,6 +46,9 @@ const VolunteerSchema:Schema = new Schema({
         required: [true, 'Please add a valid address']
     },
     zipcode:{
+        type:String
+    },
+    city:{
         type:String
     },
     location: {
@@ -94,7 +97,7 @@ VolunteerSchema.pre('save', function(next) {
 // Geocode & create location field
 VolunteerSchema.pre('save', async function(next) {
     const doc = <VolunteerModel>this;
-    const loc = await geocoder.geocode(doc.address);
+    const loc = await geocoder.geocode(`${doc.address}, ${doc.zipcode} ${doc.city}`);
     doc.location = {
         type:'Point',
         coordinates: [loc[0].longitude, loc[0].latitude],
@@ -105,7 +108,6 @@ VolunteerSchema.pre('save', async function(next) {
         zipcode: loc[0].zipCode,
         country: loc[0].countryCode,
     };
-    doc.address = undefined || loc[0].address;
     next();
 })
 

@@ -2,6 +2,7 @@ import mongoose, { Document, Schema, Model, model } from "mongoose";
 const bcrypt = require("bcryptjs");
 
 export interface UserModel extends mongoose.Document {
+    _id:Schema.Types.ObjectId,
     email:string,
     password:string,
 }
@@ -21,7 +22,8 @@ const UserSchema:Schema = new Schema({
         type: String
     },
     userId:{
-        type: Schema.Types.ObjectId
+        type: Schema.Types.ObjectId,
+        ref:"Volunteer"
     },
 },{
     toJSON: { virtuals: true },
