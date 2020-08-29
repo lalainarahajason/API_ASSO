@@ -4,6 +4,7 @@ dotenv.config({ path: './env/.env', debug: process.env.DEBUG });
 import connectDB from "./config/db";
 import express, { Application } from "express";
 const errorHandler = require("./middlewares/error")
+const cors = require('cors');
 console.log(process.env.MONGO_URI);
 connectDB();
 
@@ -24,6 +25,8 @@ class App implements KM{
         this.port   = appInit.port;
         this.middlewares(appInit.middleWares);
         this.app.use(express.json())
+        this.app.use(cors())
+        this.app.options('*', cors())
         this.routes(appInit.controllers);
        
     }
@@ -33,6 +36,7 @@ class App implements KM{
      * @param middleWares 
      */
     private middlewares(middleWares:{ forEach: (arg0:(middleWare:any) => void)=>void}){
+        
         middleWares.forEach( middleware => {
             this.app.use(middleware)
         })

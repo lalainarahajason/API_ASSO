@@ -5,6 +5,7 @@ export interface UserModel extends mongoose.Document {
     _id:Schema.Types.ObjectId,
     email:string,
     password:string,
+    userId:Schema.Types.ObjectId
 }
 const UserSchema:Schema = new Schema({
     email: {

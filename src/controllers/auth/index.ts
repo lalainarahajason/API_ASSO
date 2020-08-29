@@ -69,7 +69,7 @@ export const login = asyncHandler(async(
     res:express.Response, 
 ) => {
 
-    const {email} = req.body;
+    const { email } = req.body;
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -77,6 +77,7 @@ export const login = asyncHandler(async(
     }
 
     const user = await User.findOne({email:email}).select("-password").populate({path: 'userId'})
+    console.log(user)
     if(user){
         /**
          * @TODO
@@ -86,6 +87,7 @@ export const login = asyncHandler(async(
             algorithm: 'HS256',
             expiresIn: 86400
         });
+        
         return res.status(200).json({
             success:true,
             token,

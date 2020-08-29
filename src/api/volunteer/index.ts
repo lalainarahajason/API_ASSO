@@ -1,5 +1,6 @@
 import * as express from "express";
-import * as VolunteerController from "../../controllers/volunteer"
+import * as VolunteerController from "../../controllers/volunteer";
+import { body } from "express-validator";
 
 class RouteController {
     public router = express.Router();
@@ -20,6 +21,20 @@ class RouteController {
             next:express.NextFunction
         ) => {
             VolunteerController.findAll(req, res, next);
+        })
+
+        /**
+         * Update volunteer profile
+         * /api/v1/volunteer
+         */
+        this.router.put('/volunteer',
+            body('email').isEmail()
+            , (
+            req:express.Request, 
+            res:express.Response, 
+            next:express.NextFunction
+        ) => {
+            VolunteerController.updateProfile(req, res, next);
         })
 
     }
